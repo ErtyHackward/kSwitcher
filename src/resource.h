@@ -1,0 +1,12 @@
+#pragma once
+
+#define IDI_LAYOUTSWITCHER 101
+#define IDI_SMALL          102
+#define IDI_TRAYICON       103
+#define IDI_TRAYICON_LIGHT 111
+#define IDI_TRAYICON_DARK  112
+
+#define IDS_APP_TITLE      104
+#define IDS_APP_DESCRIPTION 105
+
+#define IDC_LAYOUTSWITCHER 109
