@@ -2,6 +2,8 @@
 
 A lightweight Windows system tray application for keyboard layout switching with intelligent text correction.
 
+**[⬇️ Download kSwitcher.exe](https://github.com/ErtyHackward/kSwitcher/releases/download/v1.0/kSwitcher.exe)**
+
 ## Features
 
 - Press **Pause/Break** key to instantly correct text typed in wrong keyboard layout. Automatically switches layout and retypes the text correctly
@@ -43,6 +45,8 @@ MIT License
 # kSwitcher - Переключатель раскладки клавиатуры
 
 Легковесное приложение для системного трея Windows для переключения раскладки клавиатуры с интеллектуальной коррекцией текста.
+
+**[⬇️ Скачать kSwitcher.exe](https://github.com/ErtyHackward/kSwitcher/releases/download/v1.0/kSwitcher.exe)**
 
 ## Возможности
 
