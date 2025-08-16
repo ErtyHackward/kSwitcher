@@ -5,7 +5,7 @@ KeyboardInterceptor* KeyboardInterceptor::_instance = nullptr;
 
 KeyboardInterceptor::KeyboardInterceptor() 
     : _keyboardHook(nullptr), _mouseHook(nullptr), _lastActiveWindow(nullptr),
-      _isProcessingCorrection(false), _correctionCount(0) {
+      _isProcessingCorrection(false), _lastCharWasSpace(false), _correctionCount(0) {
     _instance = this;
 }
 
@@ -73,8 +73,8 @@ LRESULT CALLBACK KeyboardInterceptor::MouseHookProc(int nCode, WPARAM wParam, LP
 }
 
 void KeyboardInterceptor::RecordKeystroke(int vkCode) {
-    // Clear buffer on navigation keys
-    if (vkCode == VK_SPACE || vkCode == VK_RETURN || vkCode == VK_TAB ||
+    // Clear buffer on navigation keys (excluding space)
+    if (vkCode == VK_RETURN || vkCode == VK_TAB ||
         vkCode == VK_LEFT || vkCode == VK_RIGHT || vkCode == VK_UP || vkCode == VK_DOWN ||
         vkCode == VK_HOME || vkCode == VK_END || vkCode == VK_PRIOR || vkCode == VK_NEXT ||
         vkCode == VK_ESCAPE) {
@@ -85,6 +85,9 @@ void KeyboardInterceptor::RecordKeystroke(int vkCode) {
     // Handle backspace
     if (vkCode == VK_BACK && !_keystrokeBuffer.empty()) {
         _keystrokeBuffer.pop_back();
+        // Update space flag based on the last character in buffer
+        _lastCharWasSpace = !_keystrokeBuffer.empty() && 
+                           _keystrokeBuffer.back().virtualKey == VK_SPACE;
         return;
     }
     
@@ -96,13 +99,23 @@ void KeyboardInterceptor::RecordKeystroke(int vkCode) {
         bool alt = (GetKeyState(VK_MENU) & 0x8000) != 0;
         
         if (!ctrl && !alt) {
+            // If last character was space and current is not space, clear buffer
+            if (_lastCharWasSpace && vkCode != VK_SPACE) {
+                ClearBuffer();
+                _lastCharWasSpace = false;
+            }
+            
             KeystrokeInfo keystroke;
             keystroke.virtualKey = vkCode;
             keystroke.shift = shift;
             keystroke.capsLock = capsLock;
             _keystrokeBuffer.push_back(keystroke);
+            
+            // Track if current character is space
+            _lastCharWasSpace = (vkCode == VK_SPACE);
         } else {
             ClearBuffer();
+            _lastCharWasSpace = false;
         }
     }
 }
@@ -205,4 +218,5 @@ void KeyboardInterceptor::ClearBuffer() {
     _keystrokeBuffer.clear();
     _lastCorrectedBuffer.clear();
     _correctionCount = 0;
+    _lastCharWasSpace = false;
 }

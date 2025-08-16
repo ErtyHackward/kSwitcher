@@ -34,6 +34,7 @@ private:
     std::vector<KeystrokeInfo> _lastCorrectedBuffer;
     HWND _lastActiveWindow;
     bool _isProcessingCorrection;
+    bool _lastCharWasSpace;
     int _correctionCount;
     
     static KeyboardInterceptor* _instance;
